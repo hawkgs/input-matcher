@@ -13,6 +13,7 @@ export class InputCatcher {
   private _set: InputSet;
 
   constructor() {
+    this._moveCt = 0;
     this._set = new InputSet();
   }
 
@@ -33,7 +34,7 @@ export class InputCatcher {
     }
   }
 
-  onMouseUp(ev: MouseEvent) {
+  onMouseUp(ev: MouseEvent): InputAction {
     this._mouseDown = false;
     const pos = this._getMouseCoordinates(ev);
     let action: InputAction;
@@ -50,6 +51,7 @@ export class InputCatcher {
     }
 
     this._set.add(action);
+    return action;
   }
 
   onKeyDown(ev: KeyboardEvent) {

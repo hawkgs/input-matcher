@@ -58,9 +58,14 @@ export class KeyPress extends InputAction implements IKeyPress {
 }
 
 export class InputSet {
-  private _actions: InputAction[];
+  actions: InputAction[];
+
+  constructor() {
+    this.actions = [];
+  }
 
   add(action: InputAction) {
-    this._actions.push(action);
+    console.log(action);
+    this.actions.push(action);
   }
 }

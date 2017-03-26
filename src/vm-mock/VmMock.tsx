@@ -1,87 +1,73 @@
 import * as React from 'react';
 import './VmMock.css';
 
+import { InputCatcher } from '../core/InputCatcher';
+import { InputSet, MouseClick, MouseMove, IMousePos } from '../core/InputTypes';
+
 const VM_WIDTH = 1024;
 const VM_HEIGHT = 780;
-const MOVE_LIMIT = 20;
 
 const vmSize = {
   width: VM_WIDTH,
   height: VM_HEIGHT
 };
 
-interface MousePos {
-  x: number;
-  y: number;
-}
-
 interface Click {
-  pos: MousePos;
+  click: MouseClick;
   color: string;
 }
 
-interface MouseMove {
-  points: MousePos[];
+interface Move {
+  move: MouseMove;
   color: string;
 }
 
 interface VmMockState {
   clicks: Click[];
-  moves: MouseMove[];
+  moves: Move[];
 }
 
 export class VmMock extends React.Component<any, VmMockState> {
-  private _mouseDown: boolean;
-  private _mouseMove: boolean;
-  private _moveCt: number;
-  private _currMove: MouseMove;
   private _ctx: CanvasRenderingContext2D;
+  private _inputCatcher: InputCatcher;
 
   constructor(props: any) {
     super(props);
-    this._moveCt = 0;
-    this.state = { clicks: [], moves: [] };
-  }
-
-  onMouseDown(ev: MouseEvent) {
-    this._mouseDown = true;
-    this._currMove = {
-      points: [this._getCoordinates(ev)],
-      color: this._generateRgbColor()
+    this._inputCatcher = new InputCatcher();
+    this.state = {
+      clicks: [],
+      moves: []
     };
-  }
-
-  onMouseMove(ev: MouseEvent) {
-    if (this._mouseDown) {
-      this._mouseMove = true;
-      this._moveCt++;
-
-      if (this._moveCt >= MOVE_LIMIT) {
-        this._moveCt = 0;
-        this._currMove.points.push(this._getCoordinates(ev));
-      }
-    }
-  }
-
-  onMouseUp(ev: MouseEvent) {
-    this._mouseDown = false;
-
-    if (this._mouseMove) {
-      this._mouseMove = false;
-      this._currMove.points.push(this._getCoordinates(ev));
-
-      const moves = this.state.moves.slice();
-      moves.push(this._currMove);
-      this.setState({ moves });
-      this._renderMoveInCanvas(this._currMove);
-    } else {
-      this._registerClick(ev);
-    }
   }
 
   componentDidMount() {
     const canvas = document.getElementById('moves') as HTMLCanvasElement;
     this._ctx = canvas.getContext('2d');
+  }
+
+  onMouseDown(ev: MouseEvent) {
+    this._inputCatcher.onMouseDown(ev);
+  }
+
+  onMouseMove(ev: MouseEvent) {
+    this._inputCatcher.onMouseMove(ev);
+  }
+
+  onMouseUp(ev: MouseEvent) {
+    const action = this._inputCatcher.onMouseUp(ev);
+    const color = this._generateRgbColor();
+
+    if (action instanceof MouseMove) {
+      const moves = this.state.moves.slice();
+      const move = { move: action, color };
+      moves.push(move);
+      this.setState({ moves });
+      this._renderMoveInCanvas(move);
+    } else if (action instanceof MouseClick) {
+      const clicks = this.state.clicks.slice();
+      clicks.push({ click: action, color });
+      this.setState({ clicks });
+    }
   }
 
   render() {
@@ -92,19 +78,19 @@ export class VmMock extends React.Component<any, VmMockState> {
         onMouseDown={this.onMouseDown.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
         onMouseUp={this.onMouseUp.bind(this)}>
-        {
+        { !!this.state.clicks.length &&
           this.state.clicks
             .map((c: Click, i: number) =>
               <div
-                style={{ left: c.pos.x, top: c.pos.y, background: c.color }}
+                style={{ left: c.click.pos.x, top: c.click.pos.y, background: c.color }}
                 className="click"
                 data-idx={i}
                 key={`c${i}`} />)
         }
-        {
+        { !!this.state.moves.length &&
           this.state.moves
-            .map((m: MouseMove, idx: number) =>
-              m.points.map((p: MousePos, i: number) =>
+            .map((m: Move, idx: number) =>
+              m.move.points.map((p: IMousePos, i: number) =>
                 <div
                   style={{ left: p.x, top: p.y, background: m.color }}
                   className={'move' + (i === 0 ? ' first' : '')}
@@ -116,22 +102,6 @@ export class VmMock extends React.Component<any, VmMockState> {
     );
   }
 
-  private _registerClick(ev: MouseEvent) {
-    const pos = this._getCoordinates(ev);
-    const color = this._generateRgbColor();
-    const clicks = this.state.clicks.slice();
-
-    clicks.push({ pos, color });
-    this.setState({ clicks });
-  }
-
-  private _getCoordinates(ev: MouseEvent): MousePos {
-    const elemRect = (ev.target as any).getBoundingClientRect();
-    const x = ev.clientX - elemRect.left;
-    const y = ev.clientY - elemRect.top;
-    return { x, y };
-  }
-
   private _generateRgbColor(): string {
     const r = Math.floor(Math.random() * 255);
     const g = Math.floor(Math.random() * 255);
@@ -140,8 +110,8 @@ export class VmMock extends React.Component<any, VmMockState> {
     return `rgb(${r}, ${g}, ${b})`;
   }
 
-  private _renderMoveInCanvas(move: MouseMove) {
-    move.points.forEach((p: MousePos, i: number) => {
+  private _renderMoveInCanvas(m: Move) {
+    m.move.points.forEach((p: IMousePos, i: number) => {
       if (i === 0) {
         this._ctx.beginPath();
         this._ctx.moveTo(p.x, p.y);
@@ -149,8 +119,8 @@ export class VmMock extends React.Component<any, VmMockState> {
         this._ctx.lineTo(p.x, p.y);
       }
 
-      if (i === move.points.length - 1) {
-        this._ctx.strokeStyle = move.color;
+      if (i === m.move.points.length - 1) {
+        this._ctx.strokeStyle = m.color;
         this._ctx.stroke();
       }
     });
