@@ -1,7 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import { VmMock } from './vm-mock/VmMock';
+
 ReactDOM.render(
-  <section>Bicheto</section>,
-  document.getElementById("example")
+  <VmMock />,
+  document.getElementById('app')
 );

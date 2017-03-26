@@ -1,8 +1,13 @@
 module.exports = {
-  entry: './src/index.tsx',
+  entry: [
+    // WebpackDevServer host and port
+    'webpack-dev-server/client?http://localhost:8080',
+    './src/index.tsx'
+  ],
   output: {
     filename: 'bundle.js',
-    path: __dirname + '/dist'
+    path: __dirname + '/dist',
+    publicPath: '/dist'
   },
 
   // Enable sourcemaps for debugging webpack's output.
