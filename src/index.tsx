@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { VmMock } from './vm-mock/VmMock';
+import { App } from './ui/App';
 
 ReactDOM.render(
-  <VmMock />,
+  <App />,
   document.getElementById('app')
 );

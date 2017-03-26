@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './VmMock.css';
 
-import { InputCatcher } from '../core/InputCatcher';
-import { InputSet, MouseClick, MouseMove, IMousePos } from '../core/InputTypes';
+import { InputCatcher } from '../../core/InputCatcher';
+import { InputSet, MouseClick, MouseMove, IMousePos } from '../../core/InputTypes';
 
 const VM_WIDTH = 1024;
 const VM_HEIGHT = 780;
