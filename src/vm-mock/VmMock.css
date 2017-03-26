@@ -1,0 +1,8 @@
+.vm-mock {
+  position: relative;
+  border: 2px solid red;
+  width: 1024px;
+  height: 780px;
+  margin: 50px auto 0 auto;
+  font-family: sans-serif;
+}
