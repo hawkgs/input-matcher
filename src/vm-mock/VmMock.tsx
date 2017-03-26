@@ -82,11 +82,6 @@ export class VmMock extends React.Component<any, VmMockState> {
   componentDidMount() {
     const canvas = document.getElementById('moves') as HTMLCanvasElement;
     this._ctx = canvas.getContext('2d');
-    // this._ctx.beginPath();
-    // this._ctx.moveTo(20, 20);
-    // this._ctx.lineTo(20, 100);
-    // this._ctx.lineTo(70, 100);
-    // this._ctx.stroke();
   }
 
   render() {
