@@ -2,8 +2,8 @@ export abstract class InputAction {}
 
 export enum ClickType {
   Left,
+  Scroll,
   Right,
-  Scroll
 }
 
 export interface IMousePos {

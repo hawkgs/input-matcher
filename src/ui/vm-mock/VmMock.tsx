@@ -2,7 +2,7 @@ import * as React from 'react';
 import './VmMock.css';
 
 import { InputCatcher } from '../../core/InputCatcher';
-import { InputSet, MouseClick, MouseMove, IMousePos } from '../../core/InputTypes';
+import { InputSet, MouseClick, MouseMove, IMousePos, ClickType } from '../../core/InputTypes';
 
 const VM_WIDTH = 1024;
 const VM_HEIGHT = 780;
@@ -60,6 +60,7 @@ export class VmMock extends React.Component<any, VmMockState> {
     if (action instanceof MouseMove) {
       const moves = this.state.moves.slice();
       const move = { move: action, color };
+
       moves.push(move);
       this.setState({ moves });
       this._renderMoveInCanvas(move);
@@ -75,6 +76,7 @@ export class VmMock extends React.Component<any, VmMockState> {
       <section
         style={vmSize}
         className="vm-mock"
+        onContextMenu={e => e.preventDefault() }
         onMouseDown={this.onMouseDown.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
         onMouseUp={this.onMouseUp.bind(this)}>
@@ -83,7 +85,7 @@ export class VmMock extends React.Component<any, VmMockState> {
             .map((c: Click, i: number) =>
               <div
                 style={{ left: c.click.pos.x, top: c.click.pos.y, background: c.color }}
-                className="click"
+                className={'click' + (c.click.type === ClickType.Right ? ' right' : '')}
                 data-idx={i}
                 key={`c${i}`} />)
         }

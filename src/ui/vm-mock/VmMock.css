@@ -18,13 +18,12 @@
   border-radius: 50%;
 }
 
-.move {
-  border-radius: 20%;
+.click.right {
+  border-radius: 0;
 }
 
-.move.first {
-  border: 1px solid white;
-  box-shadow: 0 0 1px black;
+.move {
+  border-radius: 20%;
 }
 
 .click::after,

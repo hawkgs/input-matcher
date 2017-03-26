@@ -46,7 +46,7 @@ export class InputCatcher {
     } else {
       // TODO: recognize mouse click
       action = new MouseClick({
-        pos, type: 1
+        pos, type: ev.button
       })
     }
 
