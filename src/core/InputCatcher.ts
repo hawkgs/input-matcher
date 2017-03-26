@@ -11,10 +11,16 @@ export class InputCatcher {
   private _moveCt: number;
   private _currMove: IMouseMove;
   private _set: InputSet;
+  private _screen
+  : HTMLElement;
 
   constructor() {
     this._moveCt = 0;
     this._set = new InputSet();
+  }
+
+  set screen(val: HTMLElement) {
+    this._screen = val;
   }
 
   onMouseDown(ev: MouseEvent) {
@@ -59,7 +65,14 @@ export class InputCatcher {
   }
 
   private _getMouseCoordinates(ev: MouseEvent): IMousePos {
-    const elemRect = (ev.target as any).getBoundingClientRect();
+    // NOTE(Georgi): This might be useless when in use along with _screen
+    let elemRect: any;
+    if (!this._screen) {
+      elemRect = (ev.target as any).getBoundingClientRect();
+    } else {
+      elemRect = this._screen.getBoundingClientRect();
+    }
+
     const x = ev.clientX - elemRect.left;
     const y = ev.clientY - elemRect.top;
     return { x, y };

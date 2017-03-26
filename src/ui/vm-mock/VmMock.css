@@ -18,6 +18,10 @@
   border-radius: 50%;
 }
 
+.vm-mock .click:hover {
+  opacity: 0.2;
+}
+
 .vm-mock .click.right {
   border-radius: 0;
 }

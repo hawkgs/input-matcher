@@ -46,6 +46,10 @@ export class VmMock extends React.Component<any, VmMockState> {
   componentDidMount() {
     const canvas = document.getElementById('moves') as HTMLCanvasElement;
     this._ctx = canvas.getContext('2d');
+
+    // NOTE: We are setting the specific target in order to avoid
+    // wrong bounding rect when clicking on .move/.click/input
+    this._inputCatcher.screen = document.querySelector('.vm-mock') as HTMLElement;
   }
 
   onMouseDown(ev: MouseEvent) {
@@ -142,11 +146,12 @@ export class VmMock extends React.Component<any, VmMockState> {
   }
 
   private _generateInputPos() {
+    const inputWidth = 184;
     this.inputs = [];
 
     for (let i = 0; i < 3; i++) {
       this.inputs.push({
-        x: Math.floor(Math.random() * (VM_WIDTH - 100)),
+        x: Math.floor(Math.random() * (VM_WIDTH - inputWidth)),
         y: Math.floor(Math.random() * VM_HEIGHT)
       });
     }
