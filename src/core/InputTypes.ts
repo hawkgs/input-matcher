@@ -48,11 +48,19 @@ export class MouseMove extends InputAction implements IMouseMove {
   }
 }
 
-export class IKeyPress extends InputAction implements IKeyPress {
+export class KeyPress extends InputAction implements IKeyPress {
   keyCode: number;
 
   constructor(obj: IKeyPress) {
     super();
     this.keyCode = obj.keyCode;
+  }
+}
+
+export class InputSet {
+  private _actions: InputAction[];
+
+  add(action: InputAction) {
+    this._actions.push(action);
   }
 }

@@ -23,7 +23,8 @@
 }
 
 .move.first {
-  box-shadow: 0 0 5px red;
+  border: 1px solid white;
+  box-shadow: 0 0 1px black;
 }
 
 .click::after,
