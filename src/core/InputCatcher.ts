@@ -44,7 +44,6 @@ export class InputCatcher {
       this._currMove.points.push(pos);
       action = new MouseMove(this._currMove);
     } else {
-      // TODO: recognize mouse click
       action = new MouseClick({
         pos, type: ev.button
       })

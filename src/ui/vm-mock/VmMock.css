@@ -6,7 +6,7 @@
   cursor: default !important;
 }
 
-.click, .move {
+.vm-mock .click, .vm-mock .move {
   position: absolute;
   width: 10px;
   height: 10px;
@@ -14,20 +14,20 @@
   margin-top: -5px;
 }
 
-.click {
+.vm-mock .click {
   border-radius: 50%;
 }
 
-.click.right {
+.vm-mock .click.right {
   border-radius: 0;
 }
 
-.move {
+.vm-mock .move {
   border-radius: 20%;
 }
 
-.click::after,
-.move.first::after {
+.vm-mock .click::after,
+.vm-mock .move.first::after {
   content: attr(data-idx);
   position: absolute;
   font-size: 11px;
@@ -35,4 +35,11 @@
   color: #666;
   top: 10px;
   left: 10px;
+}
+
+.vm-mock input {
+  position: absolute;
+  font-size: 14px;
+  padding: 5px;
+  opacity: 0.7;
 }

@@ -30,9 +30,12 @@ interface VmMockState {
 export class VmMock extends React.Component<any, VmMockState> {
   private _ctx: CanvasRenderingContext2D;
   private _inputCatcher: InputCatcher;
+  inputs: IMousePos[];
 
   constructor(props: any) {
     super(props);
+
+    this._generateInputPos();
     this._inputCatcher = new InputCatcher();
     this.state = {
       clicks: [],
@@ -66,9 +69,14 @@ export class VmMock extends React.Component<any, VmMockState> {
       this._renderMoveInCanvas(move);
     } else if (action instanceof MouseClick) {
       const clicks = this.state.clicks.slice();
+
       clicks.push({ click: action, color });
       this.setState({ clicks });
     }
+  }
+
+  onKeyDown(ev: KeyboardEvent) {
+    this._inputCatcher.onKeyDown(ev);
   }
 
   render() {
@@ -76,7 +84,8 @@ export class VmMock extends React.Component<any, VmMockState> {
       <section
         style={vmSize}
         className="vm-mock"
-        onContextMenu={e => e.preventDefault() }
+        onContextMenu={e => e.preventDefault()}
+        onKeyDown={this.onKeyDown.bind(this)}
         onMouseDown={this.onMouseDown.bind(this)}
         onMouseMove={this.onMouseMove.bind(this)}
         onMouseUp={this.onMouseUp.bind(this)}>
@@ -98,6 +107,10 @@ export class VmMock extends React.Component<any, VmMockState> {
                   className={'move' + (i === 0 ? ' first' : '')}
                   data-idx={idx}
                   key={`c${i}`} />))
+        }
+        {
+          this.inputs.map((pos: IMousePos, i: number) =>
+            <input type="text" style={{ left: pos.x, top: pos.y }} key={`i${i}`} />)
         }
         <canvas id="moves" width={VM_WIDTH} height={VM_HEIGHT} />
       </section>
@@ -126,5 +139,16 @@ export class VmMock extends React.Component<any, VmMockState> {
         this._ctx.stroke();
       }
     });
+  }
+
+  private _generateInputPos() {
+    this.inputs = [];
+
+    for (let i = 0; i < 3; i++) {
+      this.inputs.push({
+        x: Math.floor(Math.random() * (VM_WIDTH - 100)),
+        y: Math.floor(Math.random() * VM_HEIGHT)
+      });
+    }
   }
 }
