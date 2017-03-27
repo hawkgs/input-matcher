@@ -11,8 +11,7 @@ export class InputCatcher {
   private _moveCt: number;
   private _currMove: IMouseMove;
   private _set: InputSet;
-  private _screen
-  : HTMLElement;
+  private _screen: HTMLElement;
 
   constructor() {
     this._moveCt = 0;

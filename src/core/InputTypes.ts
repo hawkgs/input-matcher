@@ -1,4 +1,6 @@
-export abstract class InputAction {}
+export abstract class InputAction {
+  abstract toString(): string;
+}
 
 export enum ClickType {
   Left,
@@ -28,32 +30,44 @@ export class MouseClick extends InputAction implements IMouseClick {
   pos: IMousePos;
   type: ClickType;
 
-  constructor(obj: IMouseClick) {
+  constructor(obj?: IMouseClick) {
     super();
     this.pos = obj.pos;
     this.type = obj.type;
+  }
+
+  toString(): string {
+    return `c ${this.type} ${this.pos.x} ${this.pos.y}`;
   }
 }
 
 export class MouseMove extends InputAction implements IMouseMove {
   points: IMousePos[];
 
-  constructor(obj: IMouseMove) {
+  constructor(obj?: IMouseMove) {
     super();
-    this.points = obj.points;
+    this.points = obj.points || [];
   }
 
   addPoint(pos: IMousePos) {
     this.points.push(pos);
+  }
+
+  toString(): string {
+    return `m ${this.points.map(p => `${p.x} ${p.y} `)}`;
   }
 }
 
 export class KeyPress extends InputAction implements IKeyPress {
   keyCode: number;
 
-  constructor(obj: IKeyPress) {
+  constructor(obj?: IKeyPress) {
     super();
     this.keyCode = obj.keyCode;
+  }
+
+  toString(): string {
+    return `k ${this.keyCode}`;
   }
 }
 
@@ -67,5 +81,23 @@ export class InputSet {
   add(action: InputAction) {
     console.log(action);
     this.actions.push(action);
+  }
+
+  normalize(maxX: number, maxY: number) {
+    this.actions.forEach((a: InputAction) => {
+      if (a instanceof MouseClick) {
+        a.pos.x /= maxX;
+        a.pos.y /= maxY;
+      } else if (a instanceof MouseMove) {
+        a.points.forEach((p: IMousePos) => {
+          p.x /= maxX;
+          p.y /= maxY;
+        });
+      }
+    });
+  }
+
+  toString(): string {
+    return this.actions.map(a => `${a.toString()} `).join();
   }
 }
