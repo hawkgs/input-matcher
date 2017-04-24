@@ -1,3 +1,5 @@
+import { parseSet } from './utils/Parser';
+
 export abstract class InputAction {
   abstract toString(): string;
 }
@@ -74,7 +76,10 @@ export class KeyPress extends InputAction implements IKeyPress {
 export class InputSet {
   actions: InputAction[];
 
-  constructor() {
+  constructor(actions?: InputAction[]) {
+    if (actions) {
+      this.actions = actions;
+    }
     this.actions = [];
   }
 
@@ -95,6 +100,15 @@ export class InputSet {
         });
       }
     });
+  }
+
+  clear() {
+    this.actions = [];
+  }
+
+  copy(): InputSet {
+    // NOTE(Georgi):  Making a deep copy. Relying on the parser here.
+    return parseSet(this.toString());
   }
 
   toString(): string {

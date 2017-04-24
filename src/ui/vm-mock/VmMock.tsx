@@ -22,12 +22,16 @@ interface Move {
   color: string;
 }
 
+interface VmMockProps {
+  inputCatcher: InputCatcher;
+}
+
 interface VmMockState {
   clicks: Click[];
   moves: Move[];
 }
 
-export class VmMock extends React.Component<any, VmMockState> {
+export class VmMock extends React.Component<VmMockProps, VmMockState> {
   private _ctx: CanvasRenderingContext2D;
   private _inputCatcher: InputCatcher;
   inputs: IMousePos[];
@@ -36,7 +40,7 @@ export class VmMock extends React.Component<any, VmMockState> {
     super(props);
 
     this._generateInputPos();
-    this._inputCatcher = new InputCatcher();
+    this._inputCatcher = this.props.inputCatcher;
     this.state = {
       clicks: [],
       moves: []

@@ -18,6 +18,10 @@ export class InputCatcher {
     this._set = new InputSet();
   }
 
+  get set(): InputSet {
+    return this._set.copy();
+  }
+
   set screen(val: HTMLElement) {
     this._screen = val;
   }
@@ -61,6 +65,10 @@ export class InputCatcher {
   onKeyDown(ev: KeyboardEvent) {
     const action = new KeyPress({ keyCode: ev.keyCode })
     this._set.add(action);
+  }
+
+  clearSet() {
+    this._set.clear();
   }
 
   private _getMouseCoordinates(ev: MouseEvent): IMousePos {
