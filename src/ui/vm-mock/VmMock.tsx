@@ -24,6 +24,7 @@ interface Move {
 
 interface VmMockProps {
   inputCatcher: InputCatcher;
+  clearSet: boolean;
 }
 
 interface VmMockState {
@@ -54,6 +55,12 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
     // NOTE: We are setting the specific target in order to avoid
     // wrong bounding rect when clicking on .move/.click/input
     this._inputCatcher.screen = document.querySelector('.vm-mock') as HTMLElement;
+  }
+
+  componentWillReceiveProps(props: VmMockProps) {
+    if (props.clearSet) {
+      this._clearVmMock();
+    }
   }
 
   onMouseDown(ev: MouseEvent) {
@@ -159,5 +166,18 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
         y: Math.floor(Math.random() * VM_HEIGHT)
       });
     }
+  }
+
+  private _clearVmMock() {
+    this._ctx.clearRect(0, 0, VM_WIDTH, VM_HEIGHT);
+    this.setState({
+      clicks: [],
+      moves: []
+    });
+
+    const inputs = document.querySelectorAll('.vm-mock input');
+    [].forEach.call(inputs, (i: any) => {
+      i.value = '';
+    })
   }
 }
