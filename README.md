@@ -51,8 +51,38 @@ Currently, the most important part of the project is still not implemented. Anyw
 - Determine if the clicks are within a specific radius for each `MouseClick`
 - Perform fuzzy string searching for each `KeyPress` sequence
 
-So far, these are some common techniques. Here arises the problem - "How we are going to make all of these work together?". The possible solution:
+So far, these are some common techniques. Here arises:
 
-All of these will return a rate between `0` and `1` separately. We can use some sort of an identifier, that'll match if the rate is higher than a specified constant. _UNDER DEVELOPMENT_
+**Problem 1.** "How are we going to make all of these work together?". The possible solution:
 
-> We have to tackle the issue with determining the sequentiality
+Each algorithm will return a rate between **0** and **1** separately. Let's say we have:
+
+Training set:
+
+```
+[ Click A, Move B, Click C, PressSeq D ]
+```
+
+Input set:
+
+```
+[ Click X, Move Y, Click Z, PressSeq N ]
+```
+
+and `A != X`, `B ~ Y`, `C = Z`, `D ~ N`, then after comparison, we can end up with:
+
+```javascript
+[ 0.1, 0.88, 1, 0.74 ] // Random numbers for the demo
+```
+
+In the end we can simple take the average of the array above and conclude that we have **68%** similarity. This looks promising but then we encounter:
+
+**Problem 2.** "Determining sequentiality - how we can tackle it?"
+
+What if the input set is like that:
+
+```
+[ Move Y, Click X, Click Z, PressSeq N ]
+```
+
+_UNDER DEVELOPMENT_
