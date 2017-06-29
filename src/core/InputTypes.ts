@@ -1,33 +1,80 @@
 import { parseSet } from './utils/Parser';
 
+/**
+ * InputAction is the parent of all types of actions - key presses, clicks, etc.
+ *
+ * @export
+ * @abstract
+ * @class InputAction
+ */
 export abstract class InputAction {
   abstract toString(): string;
 }
 
+/**
+ * ClickType represents all types of user mouse clicks.
+ *
+ * @export
+ * @enum {number}
+ */
 export enum ClickType {
   Left,
   Scroll,
   Right,
 }
 
+/**
+ * IMousePos describes a mouse position with X and Y.
+ *
+ * @export
+ * @interface IMousePos
+ */
 export interface IMousePos {
   x: number;
   y: number;
 }
 
+/**
+ * IMouseClick describes a mouse click with position and click type.
+ *
+ * @export
+ * @interface IMouseClick
+ */
 export interface IMouseClick {
   pos: IMousePos;
   type: ClickType
 }
 
+
+/**
+ * IMouseMove describes a movement/dragging which is represented with set of mouse clicks.
+ *
+ * @export
+ * @interface IMouseMove
+ */
 export interface IMouseMove {
   points: IMousePos[];
 }
 
+/**
+ * IKeyPress describes a key press with via a key code.
+ *
+ * @export
+ * @interface IKeyPress
+ */
 export interface IKeyPress {
   keyCode: number;
 }
 
+/**
+ * MouseClick is an InputAction that represents a mouse click.
+ * Every click has position (`IMousePos`) and type (`IClickType`)
+ *
+ * @export
+ * @class MouseClick
+ * @extends {InputAction}
+ * @implements {IMouseClick}
+ */
 export class MouseClick extends InputAction implements IMouseClick {
   pos: IMousePos;
   type: ClickType;
@@ -46,6 +93,15 @@ export class MouseClick extends InputAction implements IMouseClick {
   }
 }
 
+/**
+ * MouseMove is an InputAction that represents a mouse movement.
+ * It is basically a set of `IMousePos`.
+ *
+ * @export
+ * @class MouseMove
+ * @extends {InputAction}
+ * @implements {IMouseMove}
+ */
 export class MouseMove extends InputAction implements IMouseMove {
   points: IMousePos[];
 
@@ -63,6 +119,15 @@ export class MouseMove extends InputAction implements IMouseMove {
   }
 }
 
+/**
+ * KeyPress is an InputAction that represents a key press.
+ * It has a `keyCode` (`number`).
+ *
+ * @export
+ * @class KeyPress
+ * @extends {InputAction}
+ * @implements {IKeyPress}
+ */
 export class KeyPress extends InputAction implements IKeyPress {
   keyCode: number;
 
@@ -79,6 +144,12 @@ export class KeyPress extends InputAction implements IKeyPress {
   }
 }
 
+/**
+ * InputSet is a container for `InputAction`-s. It provides some basic operations over the set.
+ *
+ * @export
+ * @class InputSet
+ */
 export class InputSet {
   actions: InputAction[];
 

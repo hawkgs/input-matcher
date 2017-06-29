@@ -1,11 +1,17 @@
 import { InputSet, InputAction, MouseClick, MouseMove, KeyPress, IMousePos } from '../InputTypes';
 
+/**
+ * Some sort of a factory that returns an `InputAction` instance based on a provided letter.
+ */
 const letterToType: any = {
   c: () => new MouseClick(),
   m: () => new MouseMove(),
   k: () => new KeyPress()
 }
 
+/**
+ * An object with parser functions for each type of action.
+ */
 const parsers: any = {
   MouseClick: (a: MouseClick, n: number, i: number) => {
     switch (i) {
@@ -34,11 +40,18 @@ const parsers: any = {
   }
 };
 
-// Just for convenience
+/**
+ * Stringifies an `InputSet`.
+ * @param set
+ */
 export const stringifySet = (set: InputSet): string => {
   return set.toString();
 };
 
+/**
+ * Creates an `InputSet` by the provided formatted string.
+ * @param str
+ */
 export const parseSet = (str: string): InputSet => {
   const set = new InputSet();
   const data = str.split(' ');

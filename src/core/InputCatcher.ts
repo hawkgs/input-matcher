@@ -5,6 +5,14 @@ import {
 
 const MOVE_LIMIT = 20;
 
+/**
+ * InputCatcher provides a set of DOM events that can be attached to an element.
+ * All the input (clicks, moves, etc) in element will be then recorded or captured
+ * in the `InputSet`.
+ *
+ * @export
+ * @class InputCatcher
+ */
 export class InputCatcher {
   private _mouseDown: boolean;
   private _mouseMove: boolean;
