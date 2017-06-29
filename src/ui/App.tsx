@@ -2,8 +2,7 @@ import * as React from 'react';
 
 import { VmMock } from './vm-mock/VmMock';
 import { Controls } from './controls/Controls';
-import { InputCatcher } from '../core/InputCatcher';
-import { AbstractInputMatcher, InputMatcher } from '../core/matcher/InputMatcher';
+import { InputCatcher, AbstractInputMatcher, getMatcher } from '../core';
 
 interface AppState {
   clearSet: boolean;
@@ -16,7 +15,7 @@ export class App extends React.Component<any, AppState> {
   constructor(props: any) {
     super(props);
     this.inputCatcher = new InputCatcher();
-    this.inputMatcher = new InputMatcher();
+    this.inputMatcher = getMatcher();
     this.state = { clearSet: false };
   }
 

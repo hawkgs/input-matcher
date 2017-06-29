@@ -1,26 +1,14 @@
 import { InputSet } from '../InputTypes';
+import { AbstractInputMatcher } from './AbstractInputMatcher';
 
-export abstract class AbstractInputMatcher {
-  protected _sets: InputSet[];
-
-  constructor(set?: InputSet) {
-    this._sets = [];
-    if (set) {
-      this.addSet(set);
-    }
-  }
-
-  get sets(): InputSet[] {
-    return this._sets;
-  }
-
-  addSet(set: InputSet) {
-    this._sets.push(set);
-  }
-
-  abstract match(set: InputSet): number;
-}
-
+/**
+ * Concrete implementation of the abstract input matcher.
+ * It'll be most likely the default matching mechanism.
+ *
+ * @export
+ * @class InputMatcher
+ * @extends {AbstractInputMatcher}
+ */
 export class InputMatcher extends AbstractInputMatcher {
   match(set: InputSet) {
     return 0;

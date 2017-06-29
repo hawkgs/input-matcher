@@ -3,6 +3,10 @@ import {
   IMousePos, IMouseMove, IMouseClick
 } from './InputTypes';
 
+/**
+ * It represents after how many mouse movements should a point be registered in the `MouseMove` object.
+ * The smaller, the better drawing we get.
+ */
 const MOVE_LIMIT = 20;
 
 /**

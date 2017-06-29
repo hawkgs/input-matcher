@@ -1,9 +1,7 @@
 import * as React from 'react';
 import './Controls.css';
 
-import { InputCatcher } from '../../core/InputCatcher';
-import { AbstractInputMatcher } from '../../core/matcher/InputMatcher';
-import { InputSet } from '../../core/InputTypes';
+import { AbstractInputMatcher, InputCatcher, InputSet } from '../../core';
 
 interface ControlsProps {
   inputCatcher: InputCatcher;
