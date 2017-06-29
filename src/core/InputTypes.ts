@@ -34,8 +34,11 @@ export class MouseClick extends InputAction implements IMouseClick {
 
   constructor(obj?: IMouseClick) {
     super();
-    this.pos = obj.pos;
-    this.type = obj.type;
+
+    if (obj) {
+      this.pos = obj.pos;
+      this.type = obj.type;
+    }
   }
 
   toString(): string {
@@ -48,7 +51,7 @@ export class MouseMove extends InputAction implements IMouseMove {
 
   constructor(obj?: IMouseMove) {
     super();
-    this.points = obj.points || [];
+    this.points = obj ? (obj.points || []) : [];
   }
 
   addPoint(pos: IMousePos) {
@@ -56,7 +59,7 @@ export class MouseMove extends InputAction implements IMouseMove {
   }
 
   toString(): string {
-    return `m ${this.points.map(p => `${p.x} ${p.y} `)}`;
+    return `m ${this.points.map(p => `${p.x} ${p.y}`).join(' ')}`;
   }
 }
 
@@ -65,7 +68,10 @@ export class KeyPress extends InputAction implements IKeyPress {
 
   constructor(obj?: IKeyPress) {
     super();
-    this.keyCode = obj.keyCode;
+
+    if (obj) {
+      this.keyCode = obj.keyCode;
+    }
   }
 
   toString(): string {
@@ -107,11 +113,11 @@ export class InputSet {
   }
 
   copy(): InputSet {
-    // NOTE(Georgi):  Making a deep copy. Relying on the parser here.
+    // NOTE(Georgi): Making a deep copy. Relying on the parser here.
     return parseSet(this.toString());
   }
 
   toString(): string {
-    return this.actions.map(a => `${a.toString()} `).join();
+    return this.actions.map(a => a.toString()).join(' ');
   }
 }

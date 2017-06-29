@@ -10,6 +10,10 @@ export abstract class AbstractInputMatcher {
     }
   }
 
+  get sets(): InputSet[] {
+    return this._sets;
+  }
+
   addSet(set: InputSet) {
     this._sets.push(set);
   }
