@@ -1,6 +1,11 @@
 # input-matcher
 
-_Input matcher_ is a mechanism for evaluating the similarity between user inputs like mouse clicks, key presses, dragging. It first captures the input, then performs matching. The output - a rate of how similar are the inputs.
+_Input matcher_ is a mechanism for evaluating the similarity between user inputs like mouse clicks, key presses, dragging. It first captures the input, then performs matching. The output - a coefficient of how similar are the inputs.
+
+- [How To?](#how-to)
+- [Code Structure](#code-structure)
+- [How It Works](#how-it-works)
+- [The Matcher](#the-matcher)
 
 ### How To?
 
@@ -41,15 +46,15 @@ The scheme describes the idea behind the input matcher. Note that the React app 
 
 ![scheme](./misc/scheme.png)
 
-The `InputMatcher` and `InputCatcher` doesn't know about the existance of each other. They are completely decoupled. The `InputCatcher` provides DOM events to the UI with which it can listen for the input. The generated `InputSet` is then passed to the `InputMatcher` which performs the evaluation. **In the scheme, we assume that the `InputMatcher` has already accepted a training set(s).**
+The `InputMatcher` and `InputCatcher` doesn't know about the existance of each other. They are completely decoupled. The `InputCatcher` provides DOM events to the UI with which it can listen for the input. The generated `InputSet` is then passed to the `InputMatcher` which performs the comparison. **In the scheme, we assume that the `InputMatcher` has already accepted a training set(s).**
 
 ### The Matcher
 
 Currently, the most important part of the project is still not implemented. Anyway, the idea is to:
 
-- Use pattern matching algorithm for each `MouseMove`
-- Determine if the clicks are within a specific radius for each `MouseClick`
-- Perform fuzzy string searching for each `KeyPress` sequence
+- Use pattern recognition algorithm for each `MouseMove` ([k-NN](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm); Simple, yet effective)
+- Determine if the clicks are within a specific radius for each `MouseClick` (Point in circle; How close to radius)
+- Perform approximate string matching for each `KeyPress` sequence ([Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance); Improvement of Levenshtein that'll work for us)
 
 So far, these are some common techniques. Here arises:
 
@@ -75,7 +80,7 @@ and `A != X`, `B ~ Y`, `C = Z`, `D ~ N`, then after comparison, we can end up wi
 [ 0.1, 0.88, 1, 0.74 ] // Random numbers for the demo
 ```
 
-In the end we can simple take the average of the array above and conclude that we have **68%** similarity. This looks promising but then we encounter:
+In the end we can simply take the average of the array above and conclude that we have **68%** similarity. This looks promising but then we encounter:
 
 **Problem 2.** "Determining sequentiality - how we can tackle it?"
 
