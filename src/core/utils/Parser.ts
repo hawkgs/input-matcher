@@ -16,22 +16,22 @@ const parsers: any = {
   MouseClick: (a: MouseClick, n: number, i: number) => {
     switch (i) {
       case 0:
-        a.type = i;
+        a.type = n;
         break;
       case 1:
-        a.pos = { x: i, y: -1 };
+        a.pos = { x: n, y: -1 };
         break;
       case 2:
-        a.pos.y = i;
+        a.pos.y = n;
         break;
     }
   },
 
   MouseMove: (a: MouseMove, n: number, i: number) => {
     if (i % 2 === 0) {
-      a.addPoint({ x: i, y: -1 });
+      a.addPoint({ x: n, y: -1 });
     } else {
-      a.points[a.points.length - 1].y = i;
+      a.points[a.points.length - 1].y = n;
     }
   },
 

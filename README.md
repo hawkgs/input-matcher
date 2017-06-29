@@ -1,6 +1,6 @@
 # input-matcher
 
-_Input matcher_ is mechanism for evaluating the similarity between user input like mouse clicks, key presses, dragging. It first captures the input, then performs matching. The output - a rate of how similar are the inputs.
+_Input matcher_ is a mechanism for evaluating the similarity between user inputs like mouse clicks, key presses, dragging. It first captures the input, then performs matching. The output - a rate of how similar are the inputs.
 
 ### How To?
 
