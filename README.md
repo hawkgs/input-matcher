@@ -71,25 +71,83 @@ Training set:
 Input set:
 
 ```
-[ Click X, Move Y, Click Z, PressSeq N ]
+[ Click A1, Move B1, Click C1, PressSeq D1 ]
 ```
 
-and `A != X`, `B ~ Y`, `C = Z`, `D ~ N`, then after comparison, we can end up with:
+and `A != A1`, `B ~ B1`, `C = C1`, `D ~ D1`, then after comparison, we can end up with:
 
 ```javascript
 [ 0.1, 0.88, 1, 0.74 ] // Random numbers for the demo
 ```
 
-In the end we can simply take the average of the array above and conclude that we have **68%** similarity. This looks promising but then we encounter:
+In the end we can simply take the average of the array above and conclude that we have **68%** similarity. Unfortunately, this looks promising only for the best-case scenario. Then we encounter:
 
 **Problem 2.** "Sequentiality - how we can tackle it?"
 
-What if the input set is like that:
+What if the input set is like this:
 
 ```
-[ Move Y, Click X, Click Z, PressSeq N ]
+[ Move B1, Click A1, Click C1, PressSeq D1 ]
 ```
 
-We can't compare `A` and `Y` because they are different types. Even if they were the same type, we can't be sure if the `A` is intended to represent/replicate `Y`. That's why we should check the nearby actions as well. Targetting the neighbors hence `n - 1`, `n` and `n + 1`, appears to be reasonable. Anything farther from this can be considered as a deviation from the original input, so for example, it won't matter if `n` resembles `n + 3` or not.
+We can't compare `A` and `B1` because they are different types. Even if they were the same type, we can't be sure if the `A` is intended to represent/replicate the `B1`. That's why we should check the nearby actions as well. Targetting the neighbors hence `n - 1`, `n` and `n + 1`, appears to be reasonable. Anything farther from this can be considered as a deviation from the original input, so for example, it won't matter if `n` resembles `n + 3` or not. Of course, only one of the evaluated actions will recieve a coefficient - the one with the highest one because the resemblence is the greatest.
 
-Since now we have to take in count the positions of the actions too, the scalar output array with coefficients won't work.
+Since we have to take in count the positions of the actions now, the scalar output array with coefficients won't help us. We will introduce a new object, the `OutputSet` which will keep the index offset and the coefficient:
+
+Training set:
+
+```
+[ ...,          Move A,            Move B,               ... ]
+```
+
+Input set:
+
+```
+[ ..., Move A1, Click A2, Move AB, Move B1, PressSeq B2, ... ]
+```
+
+The algorithm will:
+
+1. **Move A** will check _n - 1_, _n_ and _n + 1_
+    - **n - 1 = Move A1**: Coefficient is 0.75, so the object will be: `{ idx: -1, coef: 0.75 }`
+    - **n = Click A2**: Different types, so: `{ idx: 0, coef: 0 }`
+    - **n + 1 = Move AB**: Coefficient is 0.28, so: `{ idx: 1, coef: 0.28 }`
+
+2. **Move B** will check _n - 1_, _n_ and _n + 1_
+    - **n - 1 = Move AB**: Coefficient is 0.88, and since we already have result for **Move AB**, we will take the greater coefficient, so 0.88 > 0.28 which will result in: `{ idx: -1, coef: 0.88 }`
+    - **n = Move B1**: Coefficient is 0.80, but since we have greater coefficient that is associated with **Move B** (0.88), we will: `{ idx: 0, coef: 0 }`
+    - **n + 1 = PressSeq B2**: Different types, so: `{ idx: 1, coef: 0 }`
+
+_* Values are randomly selected for the example._
+
+Output set:
+
+```javascript
+[
+  ...,
+  { idx: -1, coef: 0.75 },
+  { idx:  0, coef:    0 },
+  { idx: -1, coef: 0.88 },
+  { idx:  0, coef:    0 },
+  { idx:  1, coef:    0 },
+  ...
+]
+```
+
+Now we have to address the differences in the positions somehow. This can happen with adding rates the farther from the original action we are going. For example:
+
+```
+[ ..., (n - 2) * 0.33 , (n - 1) * 0.66 , n * 1, (n + 1) * 0.66, (n + 2) * 0.33, ... ]
+```
+
+_Note we are using `n +/- 2` to depict the decreasing rates. The rates are randomly picked as well._
+
+So in the previous example with the subset of actions, we will get:
+
+```javascript
+[ ..., 0.66 * 0.75, 1 * 0, 0.66 * 0.88, 1 * 0, 0.66 * 0, ... ] ~ 0.22
+```
+
+**Problem 3.** "Difference in length between training and input sets."
+
+We can't guarantee the equal length of both of the sets. That's why in the case with difference, we should use zero-coefficient elements in order to address the missing actions which in practice should affect the output.
