@@ -125,19 +125,19 @@ Output set:
 ```javascript
 [
   ...,
-  { idx: -1, coef: 0.75 },
-  { idx:  0, coef:    0 },
-  { idx: -1, coef: 0.88 },
-  { idx:  0, coef:    0 },
-  { idx:  1, coef:    0 },
+  { idx: -1, coef: 0.75 }, // Move A1
+  { idx:  0, coef:    0 }, // Click A2
+  { idx: -1, coef: 0.88 }, // Move AB
+  { idx:  0, coef:    0 }, // Move B1
+  { idx:  1, coef:    0 }, // PressSeq B2
   ...
 ]
 ```
 
-Now we have to address the differences in the positions somehow. This can happen with adding rates the farther from the original action we are going. For example:
+Now we have to address the differences in the positions somehow. This can happen with adding rates the farther from the original action we are heading. For example:
 
 ```
-[ ..., (n - 2) * 0.33 , (n - 1) * 0.66 , n * 1, (n + 1) * 0.66, (n + 2) * 0.33, ... ]
+[ ..., (n - 2) * 0.33 , (n - 1) * 0.66 , (n) * 1, (n + 1) * 0.66, (n + 2) * 0.33, ... ]
 ```
 
 _Note we are using `n +/- 2` to depict the decreasing rates. The rates are randomly picked as well._
