@@ -90,7 +90,7 @@ What if the input set is like this:
 [ Move B1, Click A1, Click C1, PressSeq D1 ]
 ```
 
-We can't compare `A` and `B1` because they are different types. Even if they were the same type, we can't be sure if the `A` is intended to represent/replicate the `B1`. That's why we should check the nearby actions as well. Targetting the neighbors hence `n - 1`, `n` and `n + 1`, appears to be reasonable. Anything farther from this can be considered as a deviation from the original input, so for example, it won't matter if `n` resembles `n + 3` or not. Of course, only one of the evaluated actions will recieve a coefficient - the one with the highest one because the resemblence is the greatest.
+We can't compare `A` and `B1` because they are different types. Even if they were the same type, we can't be sure if the `A` is intended to represent/replicate the `B1`. That's why we should check the nearby actions as well. Targetting the neighbors hence `n - 1`, `n` and `n + 1`, appears to be reasonable. Anything farther from this can be considered as a deviation from the original input, so for example, it won't matter if `n` resembles `n + 3` or not. Of course, only one of the evaluated actions will receive a coefficient - the one with the highest one because the resemblence is the greatest.
 
 Since we have to take in count the positions of the actions now, the scalar output array with coefficients won't help us. We will introduce a new object, the `OutputSet` which will keep the index offset and the coefficient:
 
@@ -111,10 +111,10 @@ The algorithm will:
 1. **Move A** will check _n - 1_, _n_ and _n + 1_
     - **n - 1 = Move A1**: Coefficient is 0.75, so the object will be: `{ idx: -1, coef: 0.75 }`
     - **n = Click A2**: Different types, so: `{ idx: 0, coef: 0 }`
-    - **n + 1 = Move AB**: Coefficient is 0.28, so: `{ idx: 1, coef: 0.28 }`
+    - **n + 1 = Move AB**: Coefficient is 0.28, but 0.75 > 0.28, so: `{ idx: 1, coef: 0 }`
 
 2. **Move B** will check _n - 1_, _n_ and _n + 1_
-    - **n - 1 = Move AB**: Coefficient is 0.88, and since we already have result for **Move AB**, we will take the greater coefficient, so 0.88 > 0.28 which will result in: `{ idx: -1, coef: 0.88 }`
+    - **n - 1 = Move AB**: Coefficient is 0.88, and since we already have result for **Move AB** although 0, we will take the greater coefficient, so 0.88 > 0 which will result in: `{ idx: -1, coef: 0.88 }`. If **Move A1** coefficient was less than 0.28 and respectively **Move AB** = 0.28, we would still pick 0.88 in that case because 0.88 > 0.28.
     - **n = Move B1**: Coefficient is 0.80, but since we have greater coefficient that is associated with **Move B** (0.88), we will: `{ idx: 0, coef: 0 }`
     - **n + 1 = PressSeq B2**: Different types, so: `{ idx: 1, coef: 0 }`
 
@@ -148,6 +148,21 @@ So in the previous example with the subset of actions, we will get:
 [ ..., 0.66 * 0.75, 1 * 0, 0.66 * 0.88, 1 * 0, 0.66 * 0, ... ] ~ 0.22
 ```
 
-**Problem 3.** "Difference in length between training and input sets."
+**Problem 3.** "Unrepresented actions."
+
+Let's imagine we have the following evaluation:
+
+- **Move X**
+  - **n - 1** = 0.25
+  - **n** = 0.50
+  - **n + 1** = 0.75
+- **Move Y**
+  - **n - 1** = 0.90
+  - **n** = 0.5
+  - **n + 1** = 0.2
+
+so **Move X** is represented by its right neighbor (**n + 1**), which is 0.75 and **Move Y** by its left one, which is 0.90. However **Move X**'s right neighbor is the same as **Move Y**'s left neighbor, so we should pick the higher one which results in 0.90 for the action. In the end, it turns out that **Move X** is left unrepresented by any other action from the input set. We could now select the second greatest coefficient hence **n = 0.50** to represent it but realistically, we are always searching for the highest resemblance meaning that even if we choose the 50%, it is for sure not the action we are looking for which means that having a zero coefficient is fine.
+
+**Problem 4.** "Difference in length between training and input sets."
 
 We can't guarantee the equal length of both of the sets. That's why in the case with difference, we should use zero-coefficient elements in order to address the missing actions which in practice should affect the output.
