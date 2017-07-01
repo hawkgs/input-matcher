@@ -1,4 +1,4 @@
-import { InputSet, InputAction, MouseClick, MouseMove, KeyPress, IMousePos } from '../InputTypes';
+import { InputSet, InputAction, MouseClick, MouseMove, KeySequence, IMousePos } from '../InputTypes';
 
 /**
  * Some sort of a factory that returns an `InputAction` instance based on a provided letter.
@@ -6,7 +6,7 @@ import { InputSet, InputAction, MouseClick, MouseMove, KeyPress, IMousePos } fro
 const letterToType: any = {
   c: () => new MouseClick(),
   m: () => new MouseMove(),
-  k: () => new KeyPress()
+  k: () => new KeySequence()
 }
 
 /**
@@ -35,8 +35,8 @@ const parsers: any = {
     }
   },
 
-  KeyPress: (a: KeyPress, n: number) => {
-    a.keyCode = n;
+  KeySequence: (a: KeySequence, n: number) => {
+    a.addKey(n);
   }
 };
 

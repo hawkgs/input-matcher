@@ -1,6 +1,6 @@
 import {
-  InputAction, InputSet, MouseMove, MouseClick, KeyPress,
-  IMousePos, IMouseMove, IMouseClick
+  InputAction, InputSet, MouseMove, MouseClick, KeySequence,
+  IMousePos, IMouseMove, IMouseClick, IKeySequence
 } from './InputTypes';
 
 /**
@@ -22,6 +22,7 @@ export class InputCatcher {
   private _mouseMove: boolean;
   private _moveCt: number;
   private _currMove: IMouseMove;
+  private _currKeySeq: IKeySequence;
   private _set: InputSet;
   private _screen: HTMLElement;
 
@@ -39,6 +40,7 @@ export class InputCatcher {
   }
 
   onMouseDown(ev: MouseEvent) {
+    this._closeKeySequence();
     this._mouseDown = true;
     this._currMove = { points: [this._getMouseCoordinates(ev)] };
   }
@@ -75,12 +77,23 @@ export class InputCatcher {
   }
 
   onKeyDown(ev: KeyboardEvent) {
-    const action = new KeyPress({ keyCode: ev.keyCode })
-    this._set.add(action);
+    if (this._currKeySeq) {
+      this._currKeySeq.keyCodes.push(ev.keyCode);
+    } else {
+      this._currKeySeq = { keyCodes: [ev.keyCode] };
+    }
   }
 
   clearSet() {
     this._set.clear();
+  }
+
+  private _closeKeySequence() {
+    if (this._currKeySeq) {
+      const action = new KeySequence(this._currKeySeq)
+      this._set.add(action);
+      this._currKeySeq = null;
+    }
   }
 
   private _getMouseCoordinates(ev: MouseEvent): IMousePos {

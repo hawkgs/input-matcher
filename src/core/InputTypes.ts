@@ -56,14 +56,15 @@ export interface IMouseMove {
   points: IMousePos[];
 }
 
+
 /**
- * IKeyPress describes a key press with via a key code.
+ * IKeySequence describes a sequence of key presses.
  *
  * @export
- * @interface IKeyPress
+ * @interface IKeySequence
  */
-export interface IKeyPress {
-  keyCode: number;
+export interface IKeySequence {
+  keyCodes: number[];
 }
 
 /**
@@ -120,27 +121,28 @@ export class MouseMove extends InputAction implements IMouseMove {
 }
 
 /**
- * KeyPress is an InputAction that represents a key press.
- * It has a `keyCode` (`number`).
+ * KeySequence is an InputAction that represents a sequence of key presses.
+ * It has a `keyCodes` (`number[]`).
  *
  * @export
- * @class KeyPress
+ * @class KeySequence
  * @extends {InputAction}
- * @implements {IKeyPress}
+ * @implements {IKeySequence}
  */
-export class KeyPress extends InputAction implements IKeyPress {
-  keyCode: number;
+export class KeySequence extends InputAction implements IKeySequence {
+  keyCodes: number[];
 
-  constructor(obj?: IKeyPress) {
+  constructor(obj?: IKeySequence) {
     super();
+    this.keyCodes = obj ? (obj.keyCodes || []) : [];
+  }
 
-    if (obj) {
-      this.keyCode = obj.keyCode;
-    }
+  addKey(code: number) {
+    this.keyCodes.push(code);
   }
 
   toString(): string {
-    return `k ${this.keyCode}`;
+    return `k ${this.keyCodes.join(' ')}`;
   }
 }
 

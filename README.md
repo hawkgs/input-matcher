@@ -54,7 +54,7 @@ Currently, the most important part of the project is still not implemented. Anyw
 
 - Use pattern recognition algorithm for each `MouseMove` ([k-NN](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm); Simple, yet effective)
 - Determine if the clicks are within a specific radius for each `MouseClick` (Point in circle; How close to radius)
-- Perform approximate string matching for each `KeyPress` sequence ([Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance); Improvement of Levenshtein that'll work for us)
+- Perform approximate string matching for each `KeySequence` ([Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance); Improvement of Levenshtein that'll work for us)
 
 So far, these are some common techniques. Here arises:
 
