@@ -83,7 +83,7 @@ export class MouseClick extends InputAction implements IMouseClick {
     super();
 
     if (obj) {
-      this.pos = obj.pos;
+      this.pos = { ... obj.pos };
       this.type = obj.type;
     }
   }
@@ -107,7 +107,7 @@ export class MouseMove extends InputAction implements IMouseMove {
 
   constructor(obj?: IMouseMove) {
     super();
-    this.points = obj ? (obj.points || []) : [];
+    this.points = obj ? (obj.points.slice(0) || []) : [];
   }
 
   addPoint(pos: IMousePos) {
@@ -133,7 +133,7 @@ export class KeySequence extends InputAction implements IKeySequence {
 
   constructor(obj?: IKeySequence) {
     super();
-    this.keyCodes = obj ? (obj.keyCodes || []) : [];
+    this.keyCodes = obj ? (obj.keyCodes.slice(0) || []) : [];
   }
 
   addKey(code: number) {
@@ -156,7 +156,7 @@ export class InputSet {
 
   constructor(actions?: InputAction[]) {
     if (actions) {
-      this.actions = actions;
+      this.actions = actions.slice(0);
     }
     this.actions = [];
   }
