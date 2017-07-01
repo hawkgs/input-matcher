@@ -56,7 +56,6 @@ export interface IMouseMove {
   points: IMousePos[];
 }
 
-
 /**
  * IKeySequence describes a sequence of key presses.
  *
