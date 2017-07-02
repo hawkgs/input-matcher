@@ -146,6 +146,19 @@ export class KeySequence extends InputAction implements IKeySequence {
 }
 
 /**
+ * EmptyAction is an InputAction. It's main purpose is for equalization of the length of the comparison sets.
+ *
+ * @export
+ * @class EmptyAction
+ * @extends {InputAction}
+ */
+export class EmptyAction extends InputAction {
+  toString(): string {
+    return '';
+  }
+}
+
+/**
  * InputSet is a container for `InputAction`-s. It provides some basic operations over the set.
  *
  * @export

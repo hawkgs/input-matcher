@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { InputAction, MouseClick, ClickType, MouseMove, KeySequence } from '../InputTypes';
+import { InputAction, MouseClick, ClickType, MouseMove, KeySequence, EmptyAction, InputSet } from '../InputTypes';
 
 describe('InputTypes', () => {
   describe('MouseClick', () => {
@@ -8,7 +8,7 @@ describe('InputTypes', () => {
       pos: { x: 128, y: 256 }
     };
 
-    it('should be instance of InputAction', () => {
+    it('should be an instance of InputAction', () => {
       const click = new MouseClick();
       expect(click).is.instanceof(InputAction);
     });
@@ -36,7 +36,7 @@ describe('InputTypes', () => {
       points: [{ x: 16, y: 32 }, { x: 48, y: 64 }]
     };
 
-    it('should be instance of InputAction', () => {
+    it('should be an instance of InputAction', () => {
       const move = new MouseMove();
       expect(move).is.instanceof(InputAction);
     });
@@ -69,7 +69,7 @@ describe('InputTypes', () => {
   describe('KeySequence', () => {
     const keyseqObj = { keyCodes: [42, 43, 44, 45] };
 
-    it('should be instance of InputAction', () => {
+    it('should be an instance of InputAction', () => {
       const keyseq = new KeySequence();
       expect(keyseq).is.instanceof(InputAction);
     });
@@ -96,6 +96,18 @@ describe('InputTypes', () => {
     it('should stringify a key sequence', () => {
       const keyseq = new KeySequence(keyseqObj);
       expect(keyseq.toString()).to.equal('k 42 43 44 45');
+    });
+  });
+
+  describe('EmptyAction', () => {
+    it('should be an instance of InputAction', () => {
+      const empty = new EmptyAction();
+      expect(empty).is.instanceof(InputAction);
+    });
+
+    it('should stringify an empty action', () => {
+      const empty = new EmptyAction();
+      expect(empty.toString()).to.equal('');
     });
   });
 });
