@@ -90,7 +90,7 @@ export class InputCatcher {
 
   private _closeKeySequence() {
     if (this._currKeySeq) {
-      const action = new KeySequence(this._currKeySeq)
+      const action = new KeySequence(this._currKeySeq);
       this._set.add(action);
       this._currKeySeq = null;
     }
