@@ -42,9 +42,8 @@ export interface IMousePos {
  */
 export interface IMouseClick {
   pos: IMousePos;
-  type: ClickType
+  type: ClickType;
 }
-
 
 /**
  * IMouseMove describes a movement/dragging which is represented with set of mouse clicks.

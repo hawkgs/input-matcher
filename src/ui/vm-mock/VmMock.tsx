@@ -32,9 +32,9 @@ interface VmMockState {
 }
 
 export class VmMock extends React.Component<VmMockProps, VmMockState> {
+  inputs: IMousePos[];
   private _ctx: CanvasRenderingContext2D;
   private _inputCatcher: InputCatcher;
-  inputs: IMousePos[];
 
   constructor(props: any) {
     super(props);
@@ -45,6 +45,11 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
       clicks: [],
       moves: []
     };
+
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
   }
 
   componentDidMount() {
@@ -62,15 +67,15 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
     }
   }
 
-  onMouseDown(ev: MouseEvent) {
+  onMouseDown(ev: any) {
     this._inputCatcher.onMouseDown(ev);
   }
 
-  onMouseMove(ev: MouseEvent) {
+  onMouseMove(ev: any) {
     this._inputCatcher.onMouseMove(ev);
   }
 
-  onMouseUp(ev: MouseEvent) {
+  onMouseUp(ev: any) {
     const action = this._inputCatcher.onMouseUp(ev);
     const color = this._generateRgbColor();
 
@@ -89,7 +94,7 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
     }
   }
 
-  onKeyDown(ev: KeyboardEvent) {
+  onKeyDown(ev: any) {
     this._inputCatcher.onKeyDown(ev);
   }
 
@@ -99,10 +104,10 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
         style={vmSize}
         className="vm-mock"
         onContextMenu={e => e.preventDefault()}
-        onKeyDown={this.onKeyDown.bind(this)}
-        onMouseDown={this.onMouseDown.bind(this)}
-        onMouseMove={this.onMouseMove.bind(this)}
-        onMouseUp={this.onMouseUp.bind(this)}>
+        onKeyDown={this.onKeyDown}
+        onMouseDown={this.onMouseDown}
+        onMouseMove={this.onMouseMove}
+        onMouseUp={this.onMouseUp}>
         { !!this.state.clicks.length &&
           this.state.clicks
             .map((c: Click, i: number) =>
@@ -110,7 +115,8 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
                 style={{ left: c.click.pos.x, top: c.click.pos.y, background: c.color }}
                 className={'click' + (c.click.type === ClickType.Right ? ' right' : '')}
                 data-idx={i}
-                key={`c${i}`} />)
+                key={`c${i}`}
+              />)
         }
         { !!this.state.moves.length &&
           this.state.moves
@@ -120,7 +126,8 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
                   style={{ left: p.x, top: p.y, background: m.color }}
                   className={'move' + (i === 0 ? ' first' : '')}
                   data-idx={idx}
-                  key={`c${i}`} />))
+                  key={`c${i}`}
+                />))
         }
         {
           this.inputs.map((pos: IMousePos, i: number) =>
@@ -177,6 +184,6 @@ export class VmMock extends React.Component<VmMockProps, VmMockState> {
     const inputs = document.querySelectorAll('.vm-mock input');
     [].forEach.call(inputs, (i: any) => {
       i.value = '';
-    })
+    });
   }
 }

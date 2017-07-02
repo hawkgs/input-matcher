@@ -17,6 +17,7 @@ export class App extends React.Component<any, AppState> {
     this.inputCatcher = new InputCatcher();
     this.inputMatcher = getMatcher();
     this.state = { clearSet: false };
+    this.onClearSet = this.onClearSet.bind(this);
   }
 
   onClearSet() {
@@ -35,7 +36,8 @@ export class App extends React.Component<any, AppState> {
         <Controls
           inputCatcher={this.inputCatcher}
           inputMatcher={this.inputMatcher}
-          onClearSet={this.onClearSet.bind(this)} />
+          onClearSet={this.onClearSet}
+        />
       </section>
     );
   }

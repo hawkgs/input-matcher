@@ -7,13 +7,14 @@ const letterToType: any = {
   c: () => new MouseClick(),
   m: () => new MouseMove(),
   k: () => new KeySequence()
-}
+};
 
 /**
  * An object with parser functions for each type of action.
  */
 const parsers: any = {
   MouseClick: (a: MouseClick, n: number, i: number) => {
+    // tslint:disable-next-line:switch-default
     switch (i) {
       case 0:
         a.type = n;

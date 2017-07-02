@@ -58,7 +58,7 @@ describe('Parser', () => {
       {x: 5, y: 6},
       {x: 7, y: 8},
       {x: 9, y: 10}
-    ])
+    ]);
   });
 
   it('should parse input set', () => {
