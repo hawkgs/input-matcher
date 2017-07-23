@@ -3,7 +3,7 @@ import { AbstractInputMatcher } from './AbstractInputMatcher';
 
 interface OutputSet {
   coef: number;
-  idx: number;
+  pos: number;
 }
 
 const ConstMap = {
@@ -27,7 +27,7 @@ export class InputMatcher extends AbstractInputMatcher {
       const ts = training.copy();
       this._equalizeLength(is, ts);
       const output: OutputSet[] = Array.apply(null, Array(is.actions.length))
-        .map(String.prototype.valueOf, { coef: 0, idx: 0 });
+        .map(String.prototype.valueOf, { coef: 0, pos: 0 });
 
       ts.actions.forEach((a: InputAction, i: number) => {
         const results: OutputSet[] = [];
@@ -35,27 +35,31 @@ export class InputMatcher extends AbstractInputMatcher {
           if (is.actions[nb]) {
             results.push({
               coef: this._compare(a, is.actions[nb]),
-              idx: nb
+              pos: nb
             });
           }
         }
 
         const final = results.sort((u: OutputSet, v: OutputSet) => u.coef - v.coef).pop();
 
-        // refactor
-        if ((final.idx === 0 && output[i - 1] && output[i - 1].idx === 1 && output[i - 1].coef < final.coef) ||
-            (final.idx === -1 && output[i - 1] && output[i - 1].idx === 0 && output[i - 1].coef < final.coef)) {
-          output[i - 1] = final;
-        } else {
+        // Magic; Maybe improve one day; Assumes NEIGHBOR_RANGE = [-1, 1]
+        // If no conflict
+        if (final.pos === 1 || (final.pos === 0 && (i === 0 || output[i - 1].pos === 0))) {
+          output[i] = final;
+        } else if (
+          // If conflict
+          (final.pos === 0 && output[i - 1].pos === 1 && output[i - 1].coef < final.coef) ||
+          (final.pos === -1 && output[i - 1].pos === 0 && output[i - 1].coef < final.coef)) {
+          output[i - 1] = { coef: 0, pos: 0 };
           output[i] = final;
         }
       });
 
       return output.map((o: OutputSet) => {
-        if (o.idx === 0) {
+        if (o.pos === 0) {
           return o.coef;
         }
-        const absI = Math.abs(o.idx);
+        const absI = Math.abs(o.pos);
         return o.coef * (absI * (1 / (absI * ConstMap.NEIGHBOR_COEF_RATE)));
       }).reduce((a: number, b: number) => a + b) / output.length;
     }).reduce((a: number, b: number) => a + b) / this._sets.length;

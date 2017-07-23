@@ -92,7 +92,7 @@ What if the input set is like this:
 
 We can't compare `A` and `B1` because they are different types. Even if they were the same type, we can't be sure if the `A` is intended to represent/replicate the `B1`. That's why we should check the nearby actions as well. Targetting the neighbors hence `n - 1`, `n` and `n + 1`, appears to be reasonable. Anything farther from this can be considered as a deviation from the original input, so for example, it won't matter if `n` resembles `n + 3` or not. Of course, only one of the evaluated actions will receive a coefficient - the one with the highest one because the resemblence is the greatest.
 
-Since we have to take in count the positions of the actions now, the scalar output array with coefficients won't help us. We will introduce a new object, the `OutputSet` which will keep the index offset and the coefficient:
+Since we have to take in count the positions of the actions now, the scalar output array with coefficients won't help us. We will introduce a new object, the `OutputSet` which will keep the position offset and the coefficient:
 
 Training set:
 
@@ -109,14 +109,14 @@ Input set:
 The algorithm will:
 
 1. **Move A** will check _n - 1_, _n_ and _n + 1_
-    - **n - 1 = Move A1**: Coefficient is 0.75, so the object will be: `{ idx: -1, coef: 0.75 }`
-    - **n = Click A2**: Different types, so: `{ idx: 0, coef: 0 }`
-    - **n + 1 = Move AB**: Coefficient is 0.28, but 0.75 > 0.28, so: `{ idx: 1, coef: 0 }`
+    - **n - 1 = Move A1**: Coefficient is 0.75, so the object will be: `{ pos: -1, coef: 0.75 }`
+    - **n = Click A2**: Different types, so: `{ pos: 0, coef: 0 }`
+    - **n + 1 = Move AB**: Coefficient is 0.28, but 0.75 > 0.28, so: `{ pos: 1, coef: 0 }`
 
 2. **Move B** will check _n - 1_, _n_ and _n + 1_
-    - **n - 1 = Move AB**: Coefficient is 0.88, and since we already have result for **Move AB** although 0, we will take the greater coefficient, so 0.88 > 0 which will result in: `{ idx: -1, coef: 0.88 }`. If **Move A1** coefficient was less than 0.28 and respectively **Move AB** = 0.28, we would still pick 0.88 in that case because 0.88 > 0.28.
-    - **n = Move B1**: Coefficient is 0.80, but since we have greater coefficient that is associated with **Move B** (0.88), we will: `{ idx: 0, coef: 0 }`
-    - **n + 1 = PressSeq B2**: Different types, so: `{ idx: 1, coef: 0 }`
+    - **n - 1 = Move AB**: Coefficient is 0.88, and since we already have result for **Move AB** although 0, we will take the greater coefficient, so 0.88 > 0 which will result in: `{ pos: -1, coef: 0.88 }`. If **Move A1** coefficient was less than 0.28 and respectively **Move AB** = 0.28, we would still pick 0.88 in that case because 0.88 > 0.28.
+    - **n = Move B1**: Coefficient is 0.80, but since we have greater coefficient that is associated with **Move B** (0.88), we will: `{ pos: 0, coef: 0 }`
+    - **n + 1 = PressSeq B2**: Different types, so: `{ pos: 1, coef: 0 }`
 
 _* Values are randomly selected for the example._
 
@@ -125,11 +125,11 @@ Output set:
 ```javascript
 [
   ...,
-  { idx: -1, coef: 0.75 }, // Move A1
-  { idx:  0, coef:    0 }, // Click A2
-  { idx: -1, coef: 0.88 }, // Move AB
-  { idx:  0, coef:    0 }, // Move B1
-  { idx:  1, coef:    0 }, // PressSeq B2
+  { pos: -1, coef: 0.75 }, // Move A1
+  { pos:  0, coef:    0 }, // Click A2
+  { pos: -1, coef: 0.88 }, // Move AB
+  { pos:  0, coef:    0 }, // Move B1
+  { pos:  1, coef:    0 }, // PressSeq B2
   ...
 ]
 ```
