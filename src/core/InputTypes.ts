@@ -174,7 +174,6 @@ export class InputSet {
   }
 
   add(action: InputAction) {
-    console.log(action);
     this.actions.push(action);
   }
 

@@ -7,7 +7,7 @@ import {
  * It represents after how many mouse movements should a point be registered in the `MouseMove` object.
  * The smaller, the better drawing we get.
  */
-const MOVE_LIMIT = 20;
+const MOVE_LIMIT = 7;
 
 /**
  * InputCatcher provides a set of DOM events that can be attached to an element.
@@ -69,7 +69,7 @@ export class InputCatcher {
     } else {
       action = new MouseClick({
         pos, type: ev.button
-      })
+      });
     }
 
     this._set.add(action);

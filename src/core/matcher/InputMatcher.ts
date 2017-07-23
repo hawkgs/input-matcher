@@ -1,4 +1,4 @@
-import { InputSet, InputAction, MouseClick, MouseMove, KeySequence } from '../InputTypes';
+import { InputSet, InputAction, MouseClick, MouseMove, KeySequence, EmptyAction } from '../InputTypes';
 import { AbstractInputMatcher } from './AbstractInputMatcher';
 
 interface OutputSet {
@@ -6,7 +6,11 @@ interface OutputSet {
   idx: number;
 }
 
-const CLICK_RADIUS = 10;
+const ConstMap = {
+  CLICK_RADIUS: 10,
+  NEIGHBOR_RANGE: [-1, 1], // Don't change
+  NEIGHBOR_COEF_RATE: 2
+};
 
 /**
  * Concrete implementation of the abstract input matcher.
@@ -17,16 +21,53 @@ const CLICK_RADIUS = 10;
  * @extends {AbstractInputMatcher}
  */
 export class InputMatcher extends AbstractInputMatcher {
-  match(set: InputSet) {
-    return this._sets.map((s: InputSet) => {
-      const output: OutputSet[] = [];
+  match(input: InputSet) {
+    return this._sets.map((training: InputSet) => {
+      const is = input.copy();
+      const ts = training.copy();
+      this._equalizeLength(is, ts);
+      const output: OutputSet[] = Array.apply(null, Array(is.actions.length))
+        .map(String.prototype.valueOf, { coef: 0, idx: 0 });
 
-      s.actions.forEach((a: InputAction, i: number) => {
+      ts.actions.forEach((a: InputAction, i: number) => {
+        const results: OutputSet[] = [];
+        for (let nb = i + ConstMap.NEIGHBOR_RANGE[0]; nb <= ConstMap.NEIGHBOR_RANGE[1]; i += 1) {
+          if (is.actions[nb]) {
+            results.push({
+              coef: this._compare(a, is.actions[nb]),
+              idx: nb
+            });
+          }
+        }
 
+        const final = results.sort((u: OutputSet, v: OutputSet) => u.coef - v.coef).pop();
+
+        // refactor
+        if ((final.idx === 0 && output[i - 1] && output[i - 1].idx === 1 && output[i - 1].coef < final.coef) ||
+            (final.idx === -1 && output[i - 1] && output[i - 1].idx === 0 && output[i - 1].coef < final.coef)) {
+          output[i - 1] = final;
+        } else {
+          output[i] = final;
+        }
       });
 
-      return 0;
+      return output.map((o: OutputSet) => {
+        if (o.idx === 0) {
+          return o.coef;
+        }
+        const absI = Math.abs(o.idx);
+        return o.coef * (absI * (1 / (absI * ConstMap.NEIGHBOR_COEF_RATE)));
+      }).reduce((a: number, b: number) => a + b) / output.length;
     }).reduce((a: number, b: number) => a + b) / this._sets.length;
+  }
+
+  private _equalizeLength(a: InputSet, b: InputSet): void {
+    const diff = Math.abs(a.actions.length - b.actions.length);
+    const filled = a.actions.length > b.actions.length ? b : a;
+
+    for (let i = 0; i < diff; i += 1) {
+      filled.add(new EmptyAction());
+    }
   }
 
   private _compare(t: InputAction, i: InputAction): number {
@@ -54,7 +95,7 @@ export class InputMatcher extends AbstractInputMatcher {
     return 0;
   }
 
-  private _compareKeySequences(t: KeySequence, i: KeySequence) {
+  private _compareKeySequences(t: KeySequence, i: KeySequence): number {
     // algorithm
     return 0;
   }
