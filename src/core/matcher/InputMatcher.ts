@@ -86,7 +86,7 @@ export class InputMatcher extends AbstractInputMatcher {
     if (t.type !== i.type) {
       return 0;
     }
-    return clickDistance(t, i);
+    return clickDistance(t.pos, i.pos);
   }
 
   private _compareMoves(t: MouseMove, i: MouseMove): number {

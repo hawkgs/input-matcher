@@ -1,9 +1,9 @@
-import { MouseClick } from '../InputTypes';
+import { IMousePos as Position } from '../InputTypes';
 import { Config } from './Config';
 
-export const clickDistance = (t: MouseClick, i: MouseClick) => {
-  const dx = Math.abs(i.pos.x - t.pos.x);
-  const dy = Math.abs(i.pos.y - t.pos.y);
+export const clickDistance = (t: Position, i: Position) => {
+  const dx = Math.abs(i.x - t.x);
+  const dy = Math.abs(i.y - t.y);
   const dist = Math.sqrt(dx * dx + dy * dy);
 
   if (dist > Config.CLICK_RADIUS) {
