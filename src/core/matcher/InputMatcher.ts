@@ -1,16 +1,12 @@
 import { InputSet, InputAction, MouseClick, MouseMove, KeySequence, EmptyAction } from '../InputTypes';
 import { AbstractInputMatcher } from './AbstractInputMatcher';
+import { clickDistance } from './Algorithms';
+import { Config } from './Config';
 
 interface OutputSet {
   coef: number;
   pos: number;
 }
-
-const ConstMap = {
-  CLICK_RADIUS: 10,
-  NEIGHBOR_RANGE: [-1, 1], // Don't change
-  NEIGHBOR_COEF_RATE: 2
-};
 
 /**
  * Concrete implementation of the abstract input matcher.
@@ -31,7 +27,7 @@ export class InputMatcher extends AbstractInputMatcher {
 
       ts.actions.forEach((a: InputAction, i: number) => {
         const results: OutputSet[] = [];
-        for (let nb = i + ConstMap.NEIGHBOR_RANGE[0]; nb <= ConstMap.NEIGHBOR_RANGE[1]; i += 1) {
+        for (let nb = i + Config.NEIGHBOR_RANGE[0]; nb <= Config.NEIGHBOR_RANGE[1]; i += 1) {
           if (is.actions[nb]) {
             results.push({
               coef: this._compare(a, is.actions[nb]),
@@ -60,7 +56,7 @@ export class InputMatcher extends AbstractInputMatcher {
           return o.coef;
         }
         const absI = Math.abs(o.pos);
-        return o.coef * (absI * (1 / (absI * ConstMap.NEIGHBOR_COEF_RATE)));
+        return o.coef * (absI * (1 / (absI * Config.NEIGHBOR_COEF_RATE)));
       }).reduce((a: number, b: number) => a + b) / output.length;
     }).reduce((a: number, b: number) => a + b) / this._sets.length;
   }
@@ -90,8 +86,7 @@ export class InputMatcher extends AbstractInputMatcher {
     if (t.type !== i.type) {
       return 0;
     }
-    // algorithm
-    return 0;
+    return clickDistance(t, i);
   }
 
   private _compareMoves(t: MouseMove, i: MouseMove): number {
