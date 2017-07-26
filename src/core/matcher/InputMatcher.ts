@@ -1,6 +1,6 @@
 import { InputSet, InputAction, MouseClick, MouseMove, KeySequence, EmptyAction } from '../InputTypes';
 import { AbstractInputMatcher } from './AbstractInputMatcher';
-import { clickDistance } from './Algorithms';
+import { damerauLevenshteinDistance, clickDistance } from './Algorithms';
 import { Config } from './Config';
 
 interface OutputSet {
@@ -95,7 +95,12 @@ export class InputMatcher extends AbstractInputMatcher {
   }
 
   private _compareKeySequences(t: KeySequence, i: KeySequence): number {
-    // algorithm
-    return 0;
+    const distance = damerauLevenshteinDistance(t.keyCodes, i.keyCodes);
+    const tLen = t.keyCodes.length;
+
+    if (distance === 0) {
+      return 1;
+    }
+    return 1 - (distance / tLen);
   }
 }
