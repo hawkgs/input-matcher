@@ -169,8 +169,6 @@ so **Move X** is represented by its right neighbor (**n + 1**), which is 0.75 an
 
 We can't guarantee the equal length of both of the sets. That's why in the case with difference, we should use zero-coefficient elements in order to address the missing actions which in practice should affect the output. This can be realized by filling either the training or input set, depending which one is longer, until the same length is reached.
 
-> Insufficient
-
 **Problem 5.** "Multiple training sets."
 
 In this scenario, we are comparing the input set with each training set and then taking the average.
