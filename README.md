@@ -31,6 +31,8 @@ We will look into **src** folder:
 - **core/** - represents the capturing/matching logic
   - **matcher/** - contains matcher logic
     - **AbstractInputMatcher.ts** - contains `AbstractInputMatcher` which describes matcher's properties and behavior
+    - **Algorithms.ts** - contains a set of functions which implement the needed algorithms for matching
+    - **Config.ts** - Configuration file
     - **InputMatcher.ts** - contains `InputMatcher`; it's a concrete implementation of the above
     - **Matcher.ts** - sort of a factory (`getMatcher`) that provides an instance of `AbstractInputMatcher` accross the app
   - **tests/** - no need of explanation
@@ -52,8 +54,8 @@ The `InputMatcher` and `InputCatcher` don't know about the existance of each oth
 
 Currently, the most important part of the project is still not implemented. Anyway, the idea is to:
 
-- Use pattern recognition algorithm for each `MouseMove` ([k-NN](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm); Simple, yet effective)
-- Determine if the clicks are within a specific radius for each `MouseClick` (Point in circle; How close to radius)
+- Use pattern recognition algorithm for each `MouseMove` (_Reviewing_)
+- Determine if the clicks are within a specific radius for each `MouseClick` (Distance to a point within specified radius)
 - Perform approximate string matching for each `KeySequence` ([Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance); Improvement of Levenshtein that'll work for us)
 
 So far, these are some common techniques. Here arises:
@@ -165,7 +167,7 @@ so **Move X** is represented by its right neighbor (**n + 1**), which is 0.75 an
 
 **Problem 4.** "Difference in length between training and input sets."
 
-We can't guarantee the equal length of both of the sets. That's why in the case with difference, we should use zero-coefficient elements in order to address the missing actions which in practice should affect the output.
+We can't guarantee the equal length of both of the sets. That's why in the case with difference, we should use zero-coefficient elements in order to address the missing actions which in practice should affect the output. This can be realized by filling either the training or input set, depending which one is longer, until the same length is reached.
 
 > Insufficient
 
