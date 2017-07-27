@@ -32,13 +32,13 @@ We will look into **src** folder:
   - **matcher/** - contains matcher logic
     - **AbstractInputMatcher.ts** - contains `AbstractInputMatcher` which describes matcher's properties and behavior
     - **Algorithms.ts** - contains a set of functions which implement the needed algorithms for matching
-    - **Config.ts** - Configuration file
+    - **Config.ts** - configuration file
     - **InputMatcher.ts** - contains `InputMatcher`; it's a concrete implementation of the above
     - **Matcher.ts** - sort of a factory (`getMatcher`) that provides an instance of `AbstractInputMatcher` accross the app
   - **tests/** - no need of explanation
   - **utils/**
     - **Parser.ts** - has the logic of the parser and stringifier of input (`parseSet` and `stringifySet`); the string format is suitable for transportation FE-BE
-  - **index.ts** - Simple facade (a.k.a. barrel) of the core
+  - **index.ts** - simple facade (a.k.a. barrel) of the core
   - **InputCatcher.ts** - contains `InputCatcher`; the logic behind capturing of the input from the DOM
   - **InputTypes.ts** - contains all standardized types for clicks, movements, the set, etc.
 
@@ -52,9 +52,9 @@ The `InputMatcher` and `InputCatcher` don't know about the existance of each oth
 
 ### The Matcher
 
-Currently, the most important part of the project is still not implemented. Anyway, the idea is to:
+The idea is to:
 
-- Use pattern recognition algorithm for each `MouseMove` (_Reviewing_)
+- Use pattern recognition or algorithm for finding the similarities between two curves/set of points for each `MouseMove` (Possible candidates are [Dynamic Time Wrapping](https://en.wikipedia.org/wiki/Dynamic_time_warping) and [Frechet Distance](https://en.wikipedia.org/wiki/Fr%C3%A9chet_distance))
 - Determine if the clicks are within a specific radius for each `MouseClick` (Distance to a point within specified radius)
 - Perform approximate string matching for each `KeySequence` ([Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance); Improvement of Levenshtein that'll work for us)
 
